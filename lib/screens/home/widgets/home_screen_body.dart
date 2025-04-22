@@ -7,7 +7,7 @@ import 'package:lottie/lottie.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:qoute_app/logic/cubit/home_cubit.dart';
 import 'package:qoute_app/logic/cubit/home_states_cubit.dart';
-import 'package:qoute_app/testing/home_widget.dart';
+
 import 'package:qoute_app/testing/outfits_helper.dart';
 
 class HomePageBody extends StatelessWidget {
@@ -469,16 +469,6 @@ class HomePageBody extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => OutfitSuggestionScreen(),
-                  ),
-                );
-              },
-              child: Icon(Icons.table_rows_rounded),
             ),
           ),
     );
