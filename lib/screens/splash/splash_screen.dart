@@ -1,6 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:qoute_app/screens/home/home_screen.dart';
 
 class SplashView extends StatelessWidget {
   const SplashView({super.key});
@@ -8,12 +9,27 @@ class SplashView extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
       splashIconSize: 250,
-      nextScreen: Container(),
-      splash: Center(
-        child: LottieBuilder.asset(
-          'assets/Animation - 1742482544235.json',
-          fit: BoxFit.fill,
-        ),
+      duration: 3000,
+      nextScreen: HomeScreen(),
+      centered: true,
+      splash: Column(
+        children: [
+          Expanded(
+            child: LottieBuilder.asset(
+              'assets/Animation - 1744956806670.json',
+              fit: BoxFit.fill,
+            ),
+          ),
+
+          Text(
+            'BE STYLING',
+            style: TextStyle(
+              fontSize: 22,
+              color: Colors.black,
+              // fontFamily: 'Marker',
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "529314975308",
+    "project_id": "qoute-8e7ce",
+    "storage_bucket": "qoute-8e7ce.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529314975308:android:5a3fb0a6b99c833c50eee9",
+        "android_client_info": {
+          "package_name": "com.example.qoute_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnpQuogZrj4GHq6JGU3VI-GouPXQ8G9qQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
