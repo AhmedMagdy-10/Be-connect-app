@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
-import 'package:qoute_app/testing/outfits_helper.dart';
+import 'package:qoute_app/core/functions/outfits_helper.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 late Uint8List modelBytes;

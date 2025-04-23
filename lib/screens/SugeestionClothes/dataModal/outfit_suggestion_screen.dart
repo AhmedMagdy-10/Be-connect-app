@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:qoute_app/testing/outfits_helper.dart';
+import 'package:qoute_app/core/functions/outfits_helper.dart';
 
 class OutfitSuggestionScreen extends StatefulWidget {
   const OutfitSuggestionScreen({super.key});
@@ -123,7 +123,7 @@ class _OutfitSuggestionScreenState extends State<OutfitSuggestionScreen> {
                     Icon(Icons.star, color: Colors.black, size: 18),
                     SizedBox(width: 4),
                     Text(
-                      'Universal Match',
+                      'Universal Matching',
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -142,10 +142,6 @@ class _OutfitSuggestionScreenState extends State<OutfitSuggestionScreen> {
   }
 
   // Add these helper methods to your screen class
-  bool _isBlack(Color color) {
-    final hsl = HSLColor.fromColor(color);
-    return hsl.lightness < 0.2;
-  }
 
   bool _containsBlack(List<Color> colors) {
     return OutfitGenerator.containsBlack(colors);
@@ -215,56 +211,6 @@ class _OutfitSuggestionScreenState extends State<OutfitSuggestionScreen> {
         ),
       ],
     );
-  }
-
-  Widget _buildHarmonyTags(Color c1, Color c2) {
-    final harmonyType = _getHarmonyType(c1, c2);
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Chip(
-        label: Text(harmonyType),
-        backgroundColor: _getHarmonyColor(context, harmonyType),
-      ),
-    );
-  }
-
-  String _getHarmonyType(Color c1, Color c2) {
-    // Add classic combination check first
-    if (OutfitGenerator.getHarmonyType(c1, c2) == 'Classic Combination') {
-      return 'Classic Combination';
-    }
-
-    if (_isBlackOrNeutral(c1) || _isBlackOrNeutral(c2)) return 'Neutral Base';
-
-    final hsl1 = HSLColor.fromColor(c1);
-    final hsl2 = HSLColor.fromColor(c2);
-    final hueDiff = (hsl1.hue - hsl2.hue).abs();
-    final normalizedDiff = hueDiff > 180 ? 360 - hueDiff : hueDiff;
-
-    if (normalizedDiff < 15) return 'Monochromatic';
-    if (normalizedDiff < 30) return 'Analogous';
-    if (normalizedDiff > 150 && normalizedDiff < 210) return 'Complementary';
-    if (normalizedDiff > 110 && normalizedDiff < 130) return 'Triadic';
-
-    return 'Color Contrast';
-  }
-
-  Color _getHarmonyColor(BuildContext context, String harmonyType) {
-    final theme = Theme.of(context);
-
-    return switch (harmonyType) {
-      'Neutral Base' => theme.colorScheme.outlineVariant,
-      'Monochromatic' => theme.colorScheme.primaryContainer,
-      'Analogous' => theme.colorScheme.secondaryContainer,
-      'Complementary' => theme.colorScheme.tertiaryContainer,
-      'Triadic' => theme.colorScheme.errorContainer,
-      _ => theme.colorScheme.surface,
-    };
-  }
-
-  bool _isBlackOrNeutral(Color color) {
-    final hsl = HSLColor.fromColor(color);
-    return hsl.lightness < 0.15 || hsl.saturation < 0.1;
   }
 
   Stream<List<ClothingItem>> _getClothingStream() {

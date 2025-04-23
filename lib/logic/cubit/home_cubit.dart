@@ -8,10 +8,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:qoute_app/logic/cubit/home_states_cubit.dart';
 import 'package:qoute_app/screens/SugeestionClothes/dataModal/clothes_data_model.dart';
-import 'package:qoute_app/screens/SugeestionClothes/outfit_suggestion_screen.dart';
+import 'package:qoute_app/screens/SugeestionClothes/dataModal/outfit_suggestion_screen.dart';
 import 'package:qoute_app/screens/chosse/choose_color.dart';
 import 'package:qoute_app/screens/home/widgets/home_screen_body.dart';
-import 'package:qoute_app/testing/outfits_helper.dart';
+import 'package:qoute_app/core/functions/outfits_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeCubit extends Cubit<HomeStatesCubit> {
