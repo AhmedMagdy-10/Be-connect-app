@@ -41,7 +41,7 @@ class BottomBarCustom extends StatelessWidget {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.draw_outlined),
-              label: 'Create',
+              label: 'Design',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.favorite),

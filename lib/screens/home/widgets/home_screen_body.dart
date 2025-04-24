@@ -2,13 +2,10 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:qoute_app/constant/colors.dart';
 import 'package:qoute_app/logic/cubit/home_cubit.dart';
 import 'package:qoute_app/logic/cubit/home_states_cubit.dart';
-
 import 'package:qoute_app/core/functions/outfits_helper.dart';
 
 class HomePageBody extends StatelessWidget {
@@ -91,7 +88,9 @@ class HomePageBody extends StatelessWidget {
                       // style: TextStyle(color: Colors.white),
                     ),
                     icon: Icon(Icons.photo_library_rounded),
-                    onPressed: () {},
+                    onPressed: () {
+                      BlocProvider.of<HomeCubit>(context).uploadImage(context);
+                    },
                   ),
 
                   Expanded(
@@ -195,6 +194,7 @@ class HomePageBody extends StatelessWidget {
                                         ),
                                   );
                                 },
+
                                 onDismissed:
                                     (direction) => BlocProvider.of<HomeCubit>(
                                       context,

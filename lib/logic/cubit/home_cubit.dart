@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:qoute_app/logic/cubit/home_states_cubit.dart';
+import 'package:qoute_app/main.dart';
 import 'package:qoute_app/screens/SugeestionClothes/dataModal/clothes_data_model.dart';
 import 'package:qoute_app/screens/SugeestionClothes/dataModal/outfit_suggestion_screen.dart';
 import 'package:qoute_app/screens/chosse/choose_color.dart';
@@ -27,6 +28,7 @@ class HomeCubit extends Cubit<HomeStatesCubit> {
     OutfitSuggestionScreen(),
     // create
     DressingType(),
+
     // favourit
   ];
 
