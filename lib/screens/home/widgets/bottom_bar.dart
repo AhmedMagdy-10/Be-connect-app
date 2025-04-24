@@ -32,13 +32,10 @@ class BottomBarCustom extends StatelessWidget {
           },
           items: [
             BottomNavigationBarItem(
-              icon: FaIcon(FontAwesomeIcons.houseChimney, size: 20),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: FaIcon(FontAwesomeIcons.shirt, size: 20),
+              icon: FaIcon(FontAwesomeIcons.stairs, size: 20),
               label: 'Wardrope',
             ),
+            BottomNavigationBarItem(icon: Icon(Icons.build), label: 'Generate'),
             BottomNavigationBarItem(
               icon: Icon(Icons.draw_outlined),
               label: 'Design',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qoute_app/main.dart';
+import 'package:lottie/lottie.dart';
+import 'package:qoute_app/core/functions/cache_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:qoute_app/core/functions/outfits_helper.dart';
 
@@ -13,19 +14,6 @@ class OutfitSuggestionScreen extends StatefulWidget {
 class _OutfitSuggestionScreenState extends State<OutfitSuggestionScreen> {
   final supabase = Supabase.instance.client;
   late final Stream<List<ClothingItem>> _clothingStream;
-
-  // final bottoms = filterItems(items, ['pant', 'jean', 'trouser', 'skirt']);
-  // final outerwear = filterItems(items, ['jacket', 'coat', 'cardigan']);
-
-  // static List<Outfit> generateOutfits(List<ClothingItem> items) {
-  //   final tops = filterItems(items, [
-  //     'shirt',
-  //     't-shirt',
-  //     'top',
-  //     'blouse',
-  //     'pullover',
-  //   ]);
-  // }
 
   @override
   void initState() {
@@ -45,93 +33,81 @@ class _OutfitSuggestionScreenState extends State<OutfitSuggestionScreen> {
         _containsBlack(outfit.bottoms.first.colors);
   }
 
+  final bool? isFavorite = CacheHelper.getSaveData(key: 'isFavorite');
+  List favoriteList = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Outfit Suggestion')),
-      body: StreamBuilder<List<Map<String, dynamic>>>(
-        stream: supabase
-            .from('clothes')
-            .stream(primaryKey: ['id'])
-            .order('created_at'),
+      appBar: AppBar(
+        title: Text('Outfit Suggestion'),
+        scrolledUnderElevation: 0,
+      ),
+
+      body: StreamBuilder<List<ClothingItem>>(
+        stream: _clothingStream,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+          // Handle loading state
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: LottieBuilder.asset(
+                'assets/Animation - 1744956893461.json',
+                width: 170,
+                height: 170,
+              ),
+            );
           }
 
-          final items =
-              snapshot.data!
-                  .map(
-                    (doc) => ClothingItem(
-                      id: doc['id'].toString(),
-                      imageUrl: doc['image_url'],
-                      type: doc['type'],
-                      colors: doc['colors'],
-                      timestamp: DateTime.parse(doc['created_at']),
-                    ),
-                  )
-                  .toList();
+          // Handle errors
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
 
-          final outfits = OutfitGenerator.generateOutfits(items);
+          // Handle empty data
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text('No clothing items found. Add some items first!'),
+            );
+          }
 
+          final outfits = OutfitGenerator.generateOutfits(snapshot.data!);
+          // In your build method before generating outfits
+          print('Top colors: ${snapshot.data?.first.colors}');
+          print(
+            'Is green: ${_isGreen(snapshot.data?.first.colors.first ?? Colors.white)}',
+          );
+
+          // In _buildOutfitCard
+
+          print('Is green+black combo: $_isGreenBlackCombo(outfit)');
+          // Handle no outfit suggestions
           if (outfits.isEmpty) {
-            return Center(child: Text('No outfit suggestions available'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.warning, size: 50, color: Colors.amber),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'No outfit suggestions available',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Text(
+                    'Need at least 1 top and 1 bottom',
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            );
           }
 
-          return ListView.separated(
+          return ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: outfits.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
+              print(index);
               final outfit = outfits[index];
-              return Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Outfit Suggestion',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Compatibility: ${(outfit.compatibilityScore * 100).toStringAsFixed(1)}%',
-                        style: TextStyle(color: Colors.grey[600]),
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          OutfitItem(imageUrl: outfit.tops.first.imageUrl),
-                          const SizedBox(width: 16),
-                          OutfitItem(imageUrl: outfit.bottoms.first.imageUrl),
-                          if (outfit.outerwear.isNotEmpty) ...[
-                            const SizedBox(width: 16),
-                            OutfitItem(
-                              imageUrl: outfit.outerwear.first.imageUrl,
-                            ),
-                          ],
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Text('Save Outfit'),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(double.infinity, 40),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
+              return _buildOutfitCard(context, outfit, index);
             },
           );
         },
@@ -139,7 +115,7 @@ class _OutfitSuggestionScreenState extends State<OutfitSuggestionScreen> {
     );
   }
 
-  Widget _buildOutfitCard(BuildContext context, Outfit outfit) {
+  Widget _buildOutfitCard(BuildContext context, Outfit outfit, int index) {
     final hasBlack =
         _containsBlack(outfit.tops.first.colors) ||
         _containsBlack(outfit.bottoms.first.colors);
@@ -156,28 +132,45 @@ class _OutfitSuggestionScreenState extends State<OutfitSuggestionScreen> {
               : null,
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
+        child: Stack(
           children: [
-            if (hasBlack)
-              const Padding(
-                padding: EdgeInsets.only(bottom: 8),
-                child: Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.black, size: 18),
-                    SizedBox(width: 4),
-                    Text(
-                      'Universal Matching',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
+            Column(
+              children: [
+                if (hasBlack)
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      children: [
+                        Icon(Icons.star, color: Colors.black, size: 18),
+                        SizedBox(width: 4),
+                        Text(
+                          'Universal Matching',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                _buildItemsRow(outfit),
+                const SizedBox(height: 12),
+                _buildColorPalette(outfit),
+              ],
+            ),
+            Positioned(
+              right: 1,
+              child: InkWell(
+                onTap: () {
+                  print("favorite Index $index");
+
+                  CacheHelper.saveData(key: 'isFavorite', value: true);
+                  favoriteList.add(index);
+                },
+
+                child: Icon(Icons.favorite_border, color: Colors.grey),
               ),
-            _buildItemsRow(outfit),
-            const SizedBox(height: 12),
-            _buildColorPalette(outfit),
+            ),
           ],
         ),
       ),
