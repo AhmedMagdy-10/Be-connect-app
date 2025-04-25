@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:qoute_app/core/helper/icon_broken.dart';
 import 'package:qoute_app/logic/cubit/home_cubit.dart';
 
 class BottomBarCustom extends StatelessWidget {
@@ -32,16 +34,19 @@ class BottomBarCustom extends StatelessWidget {
           },
           items: [
             BottomNavigationBarItem(
-              icon: FaIcon(FontAwesomeIcons.stairs, size: 20),
+              icon: FaIcon(FontAwesomeIcons.shirt, size: 20),
               label: 'Wardrope',
             ),
-            BottomNavigationBarItem(icon: Icon(Icons.build), label: 'Generate'),
             BottomNavigationBarItem(
-              icon: Icon(Icons.draw_outlined),
+              icon: Icon(CupertinoIcons.wand_stars_inverse),
+              label: 'Generate',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.create),
               label: 'Design',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
+              icon: Icon(IconBroken.Heart),
               label: 'Favourit',
             ),
           ],

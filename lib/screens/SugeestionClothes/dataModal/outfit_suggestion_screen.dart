@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:qoute_app/core/functions/cache_helper.dart';
+import 'package:qoute_app/core/helper/icon_broken.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:qoute_app/core/functions/outfits_helper.dart';
 
@@ -161,14 +162,9 @@ class _OutfitSuggestionScreenState extends State<OutfitSuggestionScreen> {
             Positioned(
               right: 1,
               child: InkWell(
-                onTap: () {
-                  print("favorite Index $index");
+                onTap: () {},
 
-                  CacheHelper.saveData(key: 'isFavorite', value: true);
-                  favoriteList.add(index);
-                },
-
-                child: Icon(Icons.favorite_border, color: Colors.grey),
+                child: Icon(IconBroken.Heart, color: Colors.grey),
               ),
             ),
           ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:qoute_app/core/helper/icon_broken.dart';
 import 'package:qoute_app/logic/cubit/home_cubit.dart';
 import 'package:qoute_app/logic/cubit/home_states_cubit.dart';
 import 'package:qoute_app/core/functions/outfits_helper.dart';
@@ -46,14 +47,19 @@ class HomePageBody extends StatelessWidget {
           (context, state) => Scaffold(
             extendBody: true,
             appBar: AppBar(
+              scrolledUnderElevation: 0,
               title: const Text('Fashion Assistant'),
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
-                  child: Icon(
-                    Icons.view_agenda_outlined,
-                    size: 20,
-                    color: Colors.blue,
+                  child: CircleAvatar(
+                    radius: 22,
+                    backgroundColor: Colors.grey[200],
+                    child: Icon(
+                      IconBroken.Document,
+                      size: 20,
+                      color: Colors.blue,
+                    ),
                   ),
                 ),
               ],
@@ -162,7 +168,10 @@ class HomePageBody extends StatelessWidget {
                                 key: Key(item.id),
                                 direction: DismissDirection.endToStart,
                                 background: Container(
-                                  color: Colors.red,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    color: Colors.red,
+                                  ),
                                   alignment: Alignment.centerRight,
                                   padding: const EdgeInsets.only(right: 20),
                                   child: Icon(Icons.delete),
