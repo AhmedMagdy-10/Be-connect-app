@@ -1,122 +1,65 @@
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-
 import 'package:page_transition/page_transition.dart';
 import 'package:qoute_app/screens/chosse/clothing.dart';
 
-class DressingType extends StatefulWidget {
+class DressingType extends StatelessWidget {
   const DressingType({super.key});
 
   @override
-  _DressingTypeState createState() => _DressingTypeState();
-}
-
-class _DressingTypeState extends State<DressingType> {
-  final scrollController = ScrollController();
-  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      initialIndex: 0,
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            "How do you want to dress up?",
-
-            style: TextStyle(color: Color(0xff000000)),
-          ),
-          bottom: TabBar(
-            labelStyle: TextStyle(fontSize: 22),
-            tabs: [Tab(text: 'Formal'), Tab(text: 'Casual')],
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.grey[100]!, Colors.white],
           ),
         ),
-        body: TabBarView(children: [FormalView(), CasualView()]),
-      ),
-    );
-  }
-}
-
-class CasualView extends StatelessWidget {
-  const CasualView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Center(
-        child: GestureDetector(
-          onTap:
-              () => Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.fade,
-                  child: DressUpPage(isFormal: false),
-                ),
-              ),
-          child: Stack(
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15.0),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50.0),
+        child: DefaultTabController(
+          length: 2,
+          child: Column(
+            children: [
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    "How would you like to dress?",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[800],
+                      letterSpacing: 1.2,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  child: Image.asset("assets/shirt1.png", fit: BoxFit.contain),
                 ),
               ),
-
-              Text(
-                "Casual",
-                style: TextStyle(color: Colors.black, fontSize: 26.0),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class FormalView extends StatelessWidget {
-  const FormalView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Center(
-        child: GestureDetector(
-          onTap:
-              () => Navigator.push(
-                context,
-                PageTransition(
-                  type: PageTransitionType.fade,
-                  child: DressUpPage(isFormal: true),
+              const SizedBox(height: 20),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(15),
                 ),
-              ),
-          child: Stack(
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15.0),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50.0),
+                child: TabBar(
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    gradient: LinearGradient(
+                      colors: [Colors.blue[800]!, Colors.blue[400]!],
+                    ),
                   ),
-                  child: Image.asset("assets/shirt2.png", fit: BoxFit.contain),
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.grey[600],
+                  tabs: const [Tab(text: 'Formal'), Tab(text: 'Casual')],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "Formal",
-                  style: TextStyle(color: Colors.black, fontSize: 26.0),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    _buildStyleCard(context, true),
+                    _buildStyleCard(context, false),
+                  ],
                 ),
               ),
             ],
@@ -125,116 +68,86 @@ class FormalView extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildStyleCard(BuildContext context, bool isFormal) {
+    return GestureDetector(
+      onTap:
+          () => Navigator.push(
+            context,
+            PageTransition(
+              type: PageTransitionType.fade,
+              child: DressUpPage(isFormal: isFormal),
+            ),
+          ),
+      child: Container(
+        margin: const EdgeInsets.all(30),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: [
+            BoxShadow(color: Colors.black12, blurRadius: 15, spreadRadius: 5),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(25),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Image.asset(
+                isFormal ? "assets/shirt2.png" : "assets/shirt1.png",
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withOpacity(0.3),
+                      Colors.black.withOpacity(0.6),
+                    ],
+                  ),
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    isFormal ? "FORMAL" : "CASUAL",
+                    style: const TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 4,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 25,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: const Text(
+                      "Get Started",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
-
-//  StreamBuilder<List<Map<String, dynamic>>>(
-//                             stream: supabase
-//                                 .from('clothes')
-//                                 .stream(primaryKey: ['id'])
-//                                 .order('created_at'),
-//                             builder: (context, snapshot) {
-//                               if (!snapshot.hasData) {
-//                                 return Center(child: CircularProgressIndicator());
-//                               }
-
-//                               final items =
-//                                   snapshot.data!
-//                                       .map(
-//                                         (doc) => ClothingItem(
-//                                           id: doc['id'].toString(),
-//                                           imageUrl: doc['image_url'],
-//                                           type: doc['type'],
-//                                           colors: doc['colors'],
-//                                           timestamp: DateTime.parse(
-//                                             doc['created_at'],
-//                                           ),
-//                                         ),
-//                                       )
-//                                       .toList();
-
-//                               final outfits = generateOutfits(items);
-
-//                               if (outfits.isEmpty) {
-//                                 return Center(
-//                                   child: Text('No outfit suggestions available'),
-//                                 );
-//                               }
-
-//                               return ListView.separated(
-//                                 padding: const EdgeInsets.all(16),
-//                                 itemCount: outfits.length,
-//                                 separatorBuilder:
-//                                     (_, __) => const SizedBox(height: 16),
-//                                 itemBuilder: (context, index) {
-//                                   final outfit = outfits[index];
-//                                   return Card(
-//                                     elevation: 4,
-//                                     shape: RoundedRectangleBorder(
-//                                       borderRadius: BorderRadius.circular(16),
-//                                     ),
-//                                     child: Padding(
-//                                       padding: const EdgeInsets.all(16),
-//                                       child: Column(
-//                                         crossAxisAlignment:
-//                                             CrossAxisAlignment.start,
-//                                         children: [
-//                                           const Text(
-//                                             'Outfit Suggestion',
-//                                             style: TextStyle(
-//                                               fontSize: 16,
-//                                               fontWeight: FontWeight.bold,
-//                                             ),
-//                                           ),
-//                                           const SizedBox(height: 8),
-//                                           Text(
-//                                             'Compatibility: ${(outfit.compatibilityScore * 100).toStringAsFixed(1)}%',
-//                                             style: TextStyle(
-//                                               color: Colors.grey[600],
-//                                             ),
-//                                           ),
-//                                           const SizedBox(height: 16),
-//                                           Row(
-//                                             children: [
-//                                               _OutfitItem(
-//                                                 imageUrl:
-//                                                     outfit.tops.first.imageUrl,
-//                                               ),
-//                                               const SizedBox(width: 16),
-//                                               _OutfitItem(
-//                                                 imageUrl:
-//                                                     outfit.bottoms.first.imageUrl,
-//                                               ),
-//                                               if (outfit
-//                                                   .outerwear
-//                                                   .isNotEmpty) ...[
-//                                                 const SizedBox(width: 16),
-//                                                 _OutfitItem(
-//                                                   imageUrl:
-//                                                       outfit
-//                                                           .outerwear
-//                                                           .first
-//                                                           .imageUrl,
-//                                                 ),
-//                                               ],
-//                                             ],
-//                                           ),
-//                                           const SizedBox(height: 16),
-//                                           ElevatedButton(
-//                                             onPressed: () {},
-//                                             child: const Text('Save Outfit'),
-//                                             style: ElevatedButton.styleFrom(
-//                                               minimumSize: const Size(
-//                                                 double.infinity,
-//                                                 40,
-//                                               ),
-//                                             ),
-//                                           ),
-//                                         ],
-//                                       ),
-//                                     )
-//                                   );
-//                                 }
-//                               );
-
-//                             }
-//   )

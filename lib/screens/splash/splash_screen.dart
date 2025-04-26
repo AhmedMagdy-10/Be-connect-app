@@ -22,11 +22,11 @@ class SplashView extends StatelessWidget {
           ),
 
           Text(
-            'BE STYLING',
+            'Fashion Assistant AI',
             style: TextStyle(
               fontSize: 22,
               color: Colors.black,
-              // fontFamily: 'Marker',
+              fontFamily: 'Marker',
             ),
           ),
         ],

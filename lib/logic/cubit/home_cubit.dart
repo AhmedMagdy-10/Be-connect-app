@@ -29,7 +29,7 @@ class HomeCubit extends Cubit<HomeStatesCubit> {
     OutfitSuggestionScreen(),
     // create
     DressingType(),
-    FavoritesView(),
+    FavoriteOutfitsScreen(),
     // favourit
   ];
 

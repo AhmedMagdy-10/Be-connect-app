@@ -33,13 +33,15 @@ class Outfit {
   final List<ClothingItem> bottoms;
   final List<ClothingItem> outerwear;
   final double compatibilityScore;
+  final String id;
 
   Outfit({
     required this.tops,
     required this.bottoms,
     this.outerwear = const [],
     required this.compatibilityScore,
-  });
+  }) : id =
+           '${tops.map((t) => t.id).join()}-${bottoms.map((b) => b.id).join()}';
 
   @override
   bool operator ==(Object other) =>
@@ -47,7 +49,8 @@ class Outfit {
       other is Outfit &&
           runtimeType == other.runtimeType &&
           tops == other.tops &&
-          bottoms == other.bottoms;
+          bottoms == other.bottoms &&
+          id == other.id;
 
   @override
   int get hashCode => tops.hashCode ^ bottoms.hashCode;

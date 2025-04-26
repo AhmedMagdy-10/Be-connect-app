@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:qoute_app/core/functions/cache_helper.dart';
-import 'package:qoute_app/core/helper/icon_broken.dart';
+import 'package:qoute_app/core/functions/show_toast_state.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:qoute_app/core/functions/outfits_helper.dart';
 
@@ -16,10 +16,41 @@ class _OutfitSuggestionScreenState extends State<OutfitSuggestionScreen> {
   final supabase = Supabase.instance.client;
   late final Stream<List<ClothingItem>> _clothingStream;
 
+  List<int> favoriteIndexes = [];
+
   @override
   void initState() {
     super.initState();
     _clothingStream = _getClothingStream();
+    _loadFavorites();
+  }
+
+  Future<void> _loadFavorites() async {
+    final saved = await CacheHelper.getSaveData(key: 'favorites') ?? [];
+    if (mounted) {
+      setState(
+        () => favoriteIndexes = (saved as List<dynamic>).cast<int>().toList(),
+      );
+    }
+  }
+
+  Future<void> _toggleFavorite(int index) async {
+    final newFavorites = List<int>.from(favoriteIndexes);
+
+    if (newFavorites.contains(index)) {
+      newFavorites.remove(index);
+      showToast(text: 'Saving to favorite', state: ToastStates.success);
+    } else {
+      newFavorites.add(index);
+      showToast(text: 'Saving to favorite', state: ToastStates.success);
+    }
+
+    setState(() {
+      // Immediate UI update
+      favoriteIndexes = newFavorites;
+    });
+
+    await CacheHelper.saveData(key: 'favorites', value: newFavorites);
   }
 
   bool _isGreen(Color color) {
@@ -34,15 +65,18 @@ class _OutfitSuggestionScreenState extends State<OutfitSuggestionScreen> {
         _containsBlack(outfit.bottoms.first.colors);
   }
 
-  final bool? isFavorite = CacheHelper.getSaveData(key: 'isFavorite');
   List favoriteList = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text('Outfit Suggestion'),
         scrolledUnderElevation: 0,
+        elevation: 0,
+        backgroundColor: Colors.grey[100],
+        surfaceTintColor: Colors.transparent,
       ),
 
       body: StreamBuilder<List<ClothingItem>>(
@@ -162,9 +196,20 @@ class _OutfitSuggestionScreenState extends State<OutfitSuggestionScreen> {
             Positioned(
               right: 1,
               child: InkWell(
-                onTap: () {},
-
-                child: Icon(IconBroken.Heart, color: Colors.grey),
+                onTap: () => _toggleFavorite(index),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: Icon(
+                    favoriteIndexes.contains(index)
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    key: ValueKey<bool>(favoriteIndexes.contains(index)),
+                    color:
+                        favoriteIndexes.contains(index)
+                            ? Colors.red
+                            : Colors.grey,
+                  ),
+                ),
               ),
             ),
           ],
